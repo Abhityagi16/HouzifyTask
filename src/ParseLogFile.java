@@ -20,7 +20,7 @@ public class ParseLogFile {
 		System.out.println("Enter folder path");
 		
 		try {
-			String path = "/Users/abhishektyagi/Documents/untitledfolder";//br.readLine();
+			String path = br.readLine();
 			System.out.println("Enter time range separated by space(Ex: 14141414 15151515515)");
 			String[] time = br.readLine().split("\\s+");
 			System.out.println("Enter the number of items to include in output ");
