@@ -21,6 +21,8 @@ public class ImageRequest {
 		numOfRequest++;
 	}
 	
+	public int getResponseTime() {return responseTime;}
+	
 	public void setNumOfRequests(int num) {
 		this.numOfRequest = num;
 	}
@@ -44,8 +46,8 @@ public class ImageRequest {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String str = "Path : " + request + "\n Number of requests : " + numOfRequest + "\n Average response time : " + responseTime/numOfRequest
-				+ "Average total time : " + totalTime/numOfRequest;
+		String str = "Path : " + request + "\n Number of requests : " + numOfRequest + "\n Average response time : " + (float)responseTime/numOfRequest
+				+ "\nAverage total time : " + (float)totalTime/numOfRequest;
 		return str;
 	}
 

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -21,8 +22,8 @@ public class ParseLogFile {
 		try {
 			String path = "/Users/abhishektyagi/Documents/untitledfolder";//br.readLine();
 			System.out.println("Enter time range separated by space(Ex: 14141414 15151515515)");
-			String[] time = br.readLine().split("//s+");
-			System.out.println("Enter the number of items to include in output");
+			String[] time = br.readLine().split("\\s+");
+			System.out.println("Enter the number of items to include in output ");
 			int n = Integer.parseInt(br.readLine());
 			String option = "1";//args[0];
 			
@@ -51,35 +52,42 @@ public class ParseLogFile {
 								String jsonString = line.substring(index-2);
 								JSONObject json = new JSONObject(jsonString);
 								int timestamp = json.getInt("timestamp");
-								String requestor = json.getString("remote_addr");
-								int responseTime = json.getInt("response_time");
-								int totalTime = json.getInt("total_time");
-								String request = json.getString("http_request");
-								String[] requestParams = request.split("\\s+");
-								String imagePath = requestParams[1];
-								if(imagePath.substring(imagePath.length()-5).equals(".jpeg")) {
-									ImageRequest imageRequest = new ImageRequest(imagePath, responseTime, totalTime);
-									if(map.containsKey(imagePath)) {
-										ImageRequest temp = map.get(imagePath);
-										temp.incrementRequests();
-										temp.addResponseTime(responseTime);
-										temp.addTotalTime(totalTime);
-										
-										ImageRequest head = heap.peek();
-										if(head.getNumOfRequests() < temp.getNumOfRequests()) {
-											heap.remove(imageRequest);			//If heap doesn't contain the element then remove() method will return false but its doesn't matter
-											imageRequest.setNumOfRequests(temp.getNumOfRequests());
-											heap.add(imageRequest);
+								if(timestamp <= Integer.parseInt(time[1]) && timestamp >= Integer.parseInt(time[0])) {
+									String requestor = json.getString("remote_addr");
+									int responseTime = json.getInt("response_time");
+									int totalTime = json.getInt("total_time");
+									String request = json.getString("http_request");
+									String[] requestParams = request.split("\\s+");
+									String imagePath = requestParams[1];
+									if(imagePath.length() > 5 && imagePath.substring(imagePath.length()-5).equals(".jpeg")) {
+										ImageRequest imageRequest = new ImageRequest(imagePath, responseTime, totalTime);
+										if(map.containsKey(imagePath)) {
+											ImageRequest temp = map.get(imagePath);
+											temp.incrementRequests();
+											temp.addResponseTime(responseTime);
+											temp.addTotalTime(totalTime);
 											
+											ImageRequest head = heap.peek();
+											if(head.getNumOfRequests() < temp.getNumOfRequests()) {
+												//This will remove the object when it finds same imagePath as I've overriden equal() method of ImageRequest class
+												boolean removed = heap.remove(imageRequest);			//If heap doesn't contain the element then remove() method will return false but its doesn't matter
+												if(!removed) {
+													heap.poll();
+												}
+												imageRequest.setNumOfRequests(temp.getNumOfRequests());
+												heap.add(imageRequest);
+												
+											}
+										}
+										else {
+											
+											map.put(imagePath, imageRequest);
+											
+											if(heap.isEmpty() || heap.size() < n) heap.add(imageRequest);
 										}
 									}
-									else {
-										
-										map.put(imagePath, imageRequest);
-										
-										if(heap.isEmpty() || heap.size() < n) heap.add(imageRequest);
-									}
 								}
+								
 //								System.out.println(jsonString);
 							}
 //							System.out.println(index);
@@ -91,9 +99,12 @@ public class ParseLogFile {
 			    }
 				
 				System.out.println("Top " + n + " image request details are: ");
+				int x = 1;
 				while(!heap.isEmpty()) {
 					ImageRequest head = heap.poll();
-					System.out.println(head.toString());	//Top N will be printed from least to highest
+					System.out.println("response time " + head.getResponseTime());
+					System.out.println(x + ". " +head.toString());	//Top N will be printed from least to highest
+					x++;
 				}
 				
 				
