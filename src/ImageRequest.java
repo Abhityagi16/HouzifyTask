@@ -21,7 +21,6 @@ public class ImageRequest {
 		numOfRequest++;
 	}
 	
-	public int getResponseTime() {return responseTime;}
 	
 	public void setNumOfRequests(int num) {
 		this.numOfRequest = num;
