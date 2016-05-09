@@ -144,28 +144,22 @@ public class ParseLogFile {
 						
 					}
 			    }
-			    
-				
-				System.out.println("Top " + n + " image request details are: ");
-				int x = 1;
-				if(option.equals("1")) {
-					while(!heap.isEmpty()) {
-						ImageRequest head = heap.poll();
-						System.out.println(x + ". " +head.toString());	//Top N will be printed from least to highest
-						x++;
-					}
+			}
+			System.out.println("Top " + n + " image request details are: ");
+			int x = 1;
+			if(option.equals("1")) {
+				while(!heap.isEmpty()) {
+					ImageRequest head = heap.poll();
+					System.out.println(x + ". " +head.toString());	//Top N will be printed from least to highest
+					x++;
 				}
-				else {
-					while(!userHeap.isEmpty()) {
-						Requestor head = userHeap.poll();
-						System.out.println(x + ". " +head.toString());	//Top N will be printed from least to highest
-						x++;
-					}
+			}
+			else {
+				while(!userHeap.isEmpty()) {
+					Requestor head = userHeap.poll();
+					System.out.println(x + ". " +head.toString());	//Top N will be printed from least to highest
+					x++;
 				}
-				
-				
-				
-				
 			}
 		} catch (IOException | JSONException e) {
 			// TODO Auto-generated catch block
